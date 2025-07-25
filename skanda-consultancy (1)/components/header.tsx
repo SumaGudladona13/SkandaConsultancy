@@ -5,21 +5,28 @@ import { Button } from "@/components/ui/button"
 import { Menu, X, Phone, Mail } from "lucide-react"
 import Link from "next/link"
 
-function isAuthenticated() {
+function getAuthInfo() {
   if (typeof window !== "undefined") {
-    return !!localStorage.getItem("token")
+    const token = localStorage.getItem("token")
+    if (!token) return { isAuth: false, isAdmin: false }
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1]))
+      return { isAuth: true, isAdmin: payload.role === "admin" }
+    } catch {
+      return { isAuth: false, isAdmin: false }
+    }
   }
-  return false
+  return { isAuth: false, isAdmin: false }
 }
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [auth, setAuth] = useState(false)
+  const [auth, setAuth] = useState({ isAuth: false, isAdmin: false })
 
   useEffect(() => {
-    setAuth(isAuthenticated())
-    window.addEventListener("storage", () => setAuth(isAuthenticated()))
-    return () => window.removeEventListener("storage", () => setAuth(isAuthenticated()))
+    setAuth(getAuthInfo())
+    window.addEventListener("storage", () => setAuth(getAuthInfo()))
+    return () => window.removeEventListener("storage", () => setAuth(getAuthInfo()))
   }, [])
 
   return (
@@ -71,7 +78,7 @@ export default function Header() {
           </nav>
 
           <div className="hidden md:flex items-center space-x-4">
-            {!auth ? (
+            {!auth.isAuth ? (
               <>
                 <Link href="/login">
                   <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50 bg-transparent">Login</Button>
@@ -81,9 +88,16 @@ export default function Header() {
                 </Link>
               </>
             ) : (
-              <Link href="/profile">
-                <Button className="bg-blue-600 hover:bg-blue-700">Profile</Button>
-              </Link>
+              <>
+                {auth.isAdmin && (
+                  <Link href="/admin">
+                    <Button className="bg-purple-600 hover:bg-purple-700">Admin Dashboard</Button>
+                  </Link>
+                )}
+                <Link href="/profile">
+                  <Button className="bg-blue-600 hover:bg-blue-700">Profile</Button>
+                </Link>
+              </>
             )}
           </div>
 
@@ -113,7 +127,7 @@ export default function Header() {
                 Contact
               </Link>
               <div className="flex flex-col space-y-2 pt-4">
-                {!auth ? (
+                {!auth.isAuth ? (
                   <>
                     <Link href="/login">
                       <Button variant="outline" className="border-blue-600 text-blue-600 bg-transparent">Login</Button>
@@ -123,9 +137,16 @@ export default function Header() {
                     </Link>
                   </>
                 ) : (
-                  <Link href="/profile">
-                    <Button className="bg-blue-600 hover:bg-blue-700">Profile</Button>
-                  </Link>
+                  <>
+                    {auth.isAdmin && (
+                      <Link href="/admin">
+                        <Button className="bg-purple-600 hover:bg-purple-700">Admin Dashboard</Button>
+                      </Link>
+                    )}
+                    <Link href="/profile">
+                      <Button className="bg-blue-600 hover:bg-blue-700">Profile</Button>
+                    </Link>
+                  </>
                 )}
               </div>
             </nav>

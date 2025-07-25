@@ -1,3 +1,26 @@
+
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const dotenv = require('dotenv');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
+dotenv.config();
+
+const Property = require('./models/Property');
+const User = require('./models/User');
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('MongoDB connected'))
+  .catch((err) => console.error('MongoDB error:', err));
+
+// --- All route definitions below this line ---
+
 // Dashboard stats endpoint (admin only)
 app.get('/api/admin/dashboard', authMiddleware('admin'), async (req, res) => {
   try {
@@ -78,35 +101,15 @@ app.get('/api/admin/notifications', authMiddleware('admin'), (req, res) => {
   res.json(notifications);
 });
 
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const dotenv = require('dotenv');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-
-dotenv.config();
-
-const Property = require('./models/Property');
-const User = require('./models/User');
-
-const app = express();
-app.use(cors());
-app.use(express.json());
-
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('MongoDB connected'))
-  .catch((err) => console.error('MongoDB error:', err));
-
 
 // Signup endpoint (user)
 app.post('/api/signup', async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, phone, service } = req.body;
   try {
     const existingUser = await User.findOne({ email });
     if (existingUser) return res.status(400).json({ message: 'User already exists' });
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({ name, email, password: hashedPassword, role: "user" });
+    const user = new User({ name, email, password: hashedPassword, phone, service, role: "user" });
     await user.save();
     res.status(201).json({ message: 'User created successfully' });
   } catch (err) {
