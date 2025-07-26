@@ -6,69 +6,45 @@ import { TrendingUp, DollarSign, Users, Laptop, BarChart3, Shield, ArrowRight } 
 const services = [
   {
     id: 1,
-    title: "Business Strategy Consulting",
-    description: "Comprehensive business strategy development and implementation guidance for sustainable growth.",
-    price: "₹50,000",
-    duration: "3-6 months",
+    title: "Real Estate",
+    description: "We help you buy, sell, or rent properties with expert guidance and market insights.",
     icon: TrendingUp,
-    features: ["Market Analysis", "Growth Strategy", "Competitive Analysis", "Implementation Plan"],
+    features: [
+      "Property buying & selling assistance",
+      "Rental management",
+      "Legal and documentation support",
+      "Market analysis & investment advice"
+    ],
     badge: "Popular",
     badgeColor: "bg-green-500",
   },
   {
     id: 2,
-    title: "Financial Advisory Services",
-    description: "Expert financial planning, investment advice, and risk management solutions.",
-    price: "₹35,000",
-    duration: "2-4 months",
-    icon: DollarSign,
-    features: ["Financial Planning", "Investment Strategy", "Risk Assessment", "Tax Optimization"],
+    title: "Training",
+    description: "Professional and corporate training programs to upskill your team or yourself.",
+    icon: Users,
+    features: [
+      "Soft skills & leadership workshops",
+      "Technical and IT training",
+      "Customized corporate programs",
+      "Certification support"
+    ],
     badge: "Recommended",
     badgeColor: "bg-blue-500",
   },
   {
     id: 3,
-    title: "HR & Talent Management",
-    description: "Complete HR solutions including recruitment, training, and performance management.",
-    price: "₹40,000",
-    duration: "1-3 months",
-    icon: Users,
-    features: ["Recruitment", "Training Programs", "Performance Management", "Policy Development"],
-    badge: "",
-    badgeColor: "",
-  },
-  {
-    id: 4,
-    title: "IT Solutions & Digital Transformation",
-    description: "Modern IT infrastructure setup and digital transformation consulting.",
-    price: "₹75,000",
-    duration: "4-8 months",
-    icon: Laptop,
-    features: ["System Integration", "Cloud Migration", "Digital Strategy", "Tech Implementation"],
-    badge: "Premium",
-    badgeColor: "bg-purple-500",
-  },
-  {
-    id: 5,
-    title: "Marketing & Brand Strategy",
-    description: "Comprehensive marketing strategies and brand development for market leadership.",
-    price: "₹45,000",
-    duration: "2-5 months",
+    title: "Event Management",
+    description: "End-to-end event planning and execution for corporate and personal occasions.",
     icon: BarChart3,
-    features: ["Brand Strategy", "Digital Marketing", "Content Strategy", "Campaign Management"],
+    features: [
+      "Corporate events & conferences",
+      "Weddings & private parties",
+      "Venue selection & logistics",
+      "On-site coordination"
+    ],
     badge: "",
     badgeColor: "",
-  },
-  {
-    id: 6,
-    title: "Risk Management & Compliance",
-    description: "Enterprise risk assessment and compliance management solutions.",
-    price: "₹60,000",
-    duration: "3-6 months",
-    icon: Shield,
-    features: ["Risk Assessment", "Compliance Audit", "Policy Framework", "Monitoring Systems"],
-    badge: "Enterprise",
-    badgeColor: "bg-orange-500",
   },
 ]
 
@@ -107,12 +83,7 @@ export default function ServicesSection() {
                   <CardDescription className="text-gray-600 leading-relaxed">{service.description}</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="text-2xl font-bold text-blue-600">{service.price}</div>
-                      <div className="text-sm text-gray-500">{service.duration}</div>
-                    </div>
-                  </div>
+
 
                   <div className="space-y-2">
                     <div className="text-sm font-medium text-gray-900">Key Features:</div>
