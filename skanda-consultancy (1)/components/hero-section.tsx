@@ -10,6 +10,7 @@ export default function HeroSection() {
   const [searchQuery, setSearchQuery] = useState("")
   const [serviceType, setServiceType] = useState("")
   const [location, setLocation] = useState("")
+  const [searchResult, setSearchResult] = useState<string | null>(null)
 
   return (
     <section id="home" className="relative bg-gradient-to-br from-blue-50 via-white to-indigo-50 py-20">
@@ -47,11 +48,9 @@ export default function HeroSection() {
                     <SelectValue placeholder="Service Type" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="business">Business Strategy</SelectItem>
-                    <SelectItem value="financial">Financial Advisory</SelectItem>
-                    <SelectItem value="hr">HR Consulting</SelectItem>
-                    <SelectItem value="it">IT Solutions</SelectItem>
-                    <SelectItem value="marketing">Marketing</SelectItem>
+                    <SelectItem value="real-estate">Real Estate</SelectItem>
+                    <SelectItem value="training">Training</SelectItem>
+                    <SelectItem value="event-management">Event Management</SelectItem>
                   </SelectContent>
                 </Select>
                 <Select value={location} onValueChange={setLocation}>
@@ -67,9 +66,35 @@ export default function HeroSection() {
                   </SelectContent>
                 </Select>
               </div>
-              <Button className="w-full mt-4 h-12 bg-blue-600 hover:bg-blue-700 text-lg font-medium">
+              <Button
+                className="w-full mt-4 h-12 bg-blue-600 hover:bg-blue-700 text-lg font-medium"
+                onClick={() => {
+                  // Simple search logic for demo
+                  let result = null;
+                  if (!serviceType && !searchQuery) {
+                    result = "Please select a service or enter a search query.";
+                  } else {
+                    if (serviceType === "real-estate" || searchQuery.toLowerCase().includes("real")) {
+                      result = "Real Estate: We help you buy, sell, or rent properties with expert guidance and market insights.";
+                    } else if (serviceType === "training" || searchQuery.toLowerCase().includes("train")) {
+                      result = "Training: Professional and corporate training programs to upskill your team or yourself.";
+                    } else if (serviceType === "event-management" || searchQuery.toLowerCase().includes("event")) {
+                      result = "Event Management: End-to-end event planning and execution for corporate and personal occasions.";
+                    } else {
+                      result = "No matching service found.";
+                    }
+                  }
+                  setSearchResult(result);
+                }}
+                type="button"
+              >
                 Search Services
               </Button>
+              {searchResult && (
+                <div className="mt-4 p-4 bg-blue-50 rounded text-blue-800 text-center text-base font-medium">
+                  {searchResult}
+                </div>
+              )}
             </div>
 
             {/* Quick Stats */}
