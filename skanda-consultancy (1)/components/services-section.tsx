@@ -1,3 +1,6 @@
+
+"use client"
+import { useRouter } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -49,6 +52,7 @@ const services = [
 ]
 
 export default function ServicesSection() {
+  const router = useRouter()
   return (
     <section id="services" className="py-20 bg-gray-50">
       <div className="container mx-auto px-4">
@@ -97,7 +101,11 @@ export default function ServicesSection() {
                     </ul>
                   </div>
 
-                  <Button className="w-full bg-blue-600 hover:bg-blue-700 group-hover:bg-blue-700 transition-colors">
+                  <Button
+                    className="w-full bg-blue-600 hover:bg-blue-700 group-hover:bg-blue-700 transition-colors"
+                    type="button"
+                    onClick={() => router.push("/services")}
+                  >
                     Get Started
                     <ArrowRight className="w-4 h-4 ml-2" />
                   </Button>

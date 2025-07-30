@@ -10,10 +10,108 @@ dotenv.config();
 
 const Property = require('./models/Property');
 const User = require('./models/User');
+const Course = require('./models/Course');
+const EventFeature = require('./models/EventFeature');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// --- Course management endpoints (admin only) ---
+app.get('/api/admin/courses', authMiddleware('admin'), async (req, res) => {
+  try {
+    const courses = await Course.find();
+    res.json(courses);
+  } catch {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+app.post('/api/admin/courses', authMiddleware('admin'), async (req, res) => {
+  try {
+    const course = new Course(req.body);
+    await course.save();
+    res.status(201).json(course);
+  } catch {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+app.put('/api/admin/courses/:id', authMiddleware('admin'), async (req, res) => {
+  try {
+    const course = await Course.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json(course);
+  } catch {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+app.delete('/api/admin/courses/:id', authMiddleware('admin'), async (req, res) => {
+  try {
+    await Course.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Course deleted' });
+  } catch {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// --- Event Feature management endpoints (admin only) ---
+app.get('/api/admin/event-features', authMiddleware('admin'), async (req, res) => {
+  try {
+    const features = await EventFeature.find();
+    res.json(features);
+  } catch {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+app.post('/api/admin/event-features', authMiddleware('admin'), async (req, res) => {
+  try {
+    const feature = new EventFeature(req.body);
+    await feature.save();
+    res.status(201).json(feature);
+  } catch {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+app.put('/api/admin/event-features/:id', authMiddleware('admin'), async (req, res) => {
+  try {
+    const feature = await EventFeature.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json(feature);
+  } catch {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+app.delete('/api/admin/event-features/:id', authMiddleware('admin'), async (req, res) => {
+  try {
+    await EventFeature.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Event feature deleted' });
+  } catch {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// --- Public endpoints for user access ---
+app.get('/api/properties', async (req, res) => {
+  try {
+    const properties = await Property.find();
+    res.json(properties);
+  } catch {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+app.get('/api/courses', async (req, res) => {
+  try {
+    const courses = await Course.find();
+    res.json(courses);
+  } catch {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+app.get('/api/event-features', async (req, res) => {
+  try {
+    const features = await EventFeature.find();
+    res.json(features);
+  } catch {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
 
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected'))
