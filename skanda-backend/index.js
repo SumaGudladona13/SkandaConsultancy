@@ -284,16 +284,40 @@ app.get('/api/admin/users', authMiddleware('admin'), async (req, res) => {
   }
 });
 
-// Property endpoints (existing)
-app.get('/api/properties', async (req, res) => {
-  const properties = await Property.find();
-  res.json(properties);
-});
 
-app.post('/api/properties', async (req, res) => {
-  const newProperty = new Property(req.body);
-  await newProperty.save();
-  res.status(201).json(newProperty);
+// Property endpoints (public GET, admin POST/PUT/DELETE)
+app.get('/api/properties', async (req, res) => {
+  try {
+    const properties = await Property.find();
+    res.json(properties);
+  } catch {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+app.post('/api/properties', authMiddleware('admin'), async (req, res) => {
+  try {
+    const newProperty = new Property(req.body);
+    await newProperty.save();
+    res.status(201).json(newProperty);
+  } catch {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+app.put('/api/properties/:id', authMiddleware('admin'), async (req, res) => {
+  try {
+    const property = await Property.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json(property);
+  } catch {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+app.delete('/api/properties/:id', authMiddleware('admin'), async (req, res) => {
+  try {
+    await Property.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Property deleted' });
+  } catch {
+    res.status(500).json({ message: 'Server error' });
+  }
 });
 
 const PORT = process.env.PORT || 5000;
